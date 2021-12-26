@@ -184,9 +184,10 @@ def text_preprocess(document):
     # chuẩn hóa cách gõ dấu tiếng Việt
     document = chuan_hoa_dau_cau_tieng_viet(document)
     # tách từ
-    document = word_tokenize(document, format="text")
+    document = word_tokenize(document, format='text')
     # đưa về lower
-    document = document.lower()
+    document = str(document).lower()
+
     # xóa các ký tự không cần thiết
     document = re.sub(r'[^\s\wáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệóòỏõọôốồổỗộơớờởỡợíìỉĩịúùủũụưứừửữựýỳỷỹỵđ_]', ' ', document)
     # xóa khoảng trắng thừa

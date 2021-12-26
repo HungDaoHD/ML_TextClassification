@@ -1,15 +1,12 @@
 import os
 # Turn off TensorFlow warning messages in program output
-import numpy
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import pandas as pd
 import functions as func
 from keras.preprocessing import sequence
-import keras
 import tensorflow as tf
-import os
 import numpy as np
 
 
@@ -69,20 +66,21 @@ for idx, val in np.ndenumerate(test_data):
 train_data = sequence.pad_sequences(train_data, MAXLEN)
 test_data = sequence.pad_sequences(test_data, MAXLEN)
 
-isNewTraining = True
+isNewTraining = False
 
 if isNewTraining:
     print('Creating the Model')
     model = tf.keras.Sequential([
         tf.keras.layers.Embedding(VOCAB_SIZE, 32),
         tf.keras.layers.LSTM(32),
-        tf.keras.layers.Dense(3, activation='sigmoid')#relu
+        tf.keras.layers.Dense(3, activation='sigmoid')  # sigmoid relu softmax tanh
     ])
 
     print('Training')
-    model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['acc'])
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])  # rmsprop adam
 
-    history = model.fit(train_data, train_labels, epochs=1, validation_split=0.2)
+    epochs = 10
+    history = model.fit(train_data, train_labels, epochs=epochs, validation_split=0.2)
 
     results = model.evaluate(test_data, test_labels)
     print(results)
@@ -97,7 +95,7 @@ else:
 
 
 print('Making Predictions')
-dfPre = pd.Series(['giới thiếu nếu ngân_hàng nằm ở vị_trí thuận_tiện khi cần đi nộp tiền vào tài_khoản'])
+dfPre = pd.Series(['quận 12 hiện_tại rất ít chi_nhánh techcombank cần đặt thêm chi_nhánh trên các tuyến đường lớn như lê_văn_khương lê_thị_riêng nguyễn_ảnh_thủ hiệp thành'])
 # 'Không hài lòng với những giao dịch rút tiền mặt tại quầy'
 # 'Dịch vụ tốt, nhân viên chăm sóc khách hàng tốt'
 
@@ -111,15 +109,15 @@ for idx, val in np.ndenumerate(testArr):
 testArr = sequence.pad_sequences(testArr, MAXLEN)
 
 
-def predict(encoded_text):
-    pred = np.zeros((1, 250))
-    pred[0] = encoded_text
-    result = model.predict(pred)
-    print(result[0])
+def predict(encoded_arr):
+    for encoded_text in encoded_arr:
+        pred = np.zeros((1, 250))
+        pred[0] = encoded_text
+        result = model.predict(pred)
+        print(result[0])
 
 
-predict(testArr[0])
-
+predict(testArr)
 
 print('Done')
 
